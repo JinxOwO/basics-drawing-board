@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>画板</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+        
+        canvas {
+            border: 1px solid red;
+        }
+        
+        .box {
+            width: 900px;
+            margin: 0 auto;
+        }
+        
+        .gj {
+            padding: 10px;
+        }
+        
+        button,
+        input {
+            margin-right: 15px;
+            outline: none;
+        }
+        
+        #numberBtn,
+        #colorBtn {
+            width: 70px;
+            height: 30px;
+            line-height: 30px;
+            vertical-align: middle;
+        }
+        
+        #name {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <div class="gj">
+            <button id="clearBtn">清空画布</button> 选择颜色: <input type="color" id="colorBtn">
+            <input type="number" id="numberBtn" value="1">
+            <button id="clearxp">切换画笔/橡皮擦</button>
+            <span id="name">当前为: 画笔</span>
+        </div>
+
+        <canvas width="700" height="700">看见就是不支持</canvas>
+    </div>
+
+</body>
+<script>
+    /** @type {HTMLCanvasElement} */
+    var myCanvas = document.querySelector("canvas");
+    var colorBtn = document.querySelector("#colorBtn");
+    var numberBtn = document.querySelector("#numberBtn");
+    var clearxp = document.querySelector("#clearxp");
+    var name1 = document.querySelector("#name");
+    var ctx = myCanvas.getContext("2d");
+    // 记录颜色
+    var bgc = "";
+    var numb;
+    // 鼠标点击时 开始作画
+    var x;
+    var y;
+    var flag = false;
+    myCanvas.onmousedown = function(e) {
+        ctx.beginPath();
+        x = e.pageX - this.offsetLeft;
+        y = e.pageY - this.offsetTop;
+        ctx.moveTo(x, y);
+        // 鼠标在画布上移动时作画
+        myCanvas.onmousemove = function(e) {
+            x = e.pageX - this.offsetLeft;
+            y = e.pageY - this.offsetTop;
+            console.log(x, y);
+
+            if (!flag) {
+                // 设置颜色
+                ctx.strokeStyle = bgc;
+                ctx.lineWidth = numb;
+                ctx.lineTo(x, y);
+                ctx.stroke();
+            } else {
+                ctx.clearRect(x, y, 80, 80);
+            }
+
+        }
+    }
+
+    // 鼠标抬起时 不继续画
+    myCanvas.onmouseup = function() {
+        myCanvas.onmousemove = "";
+    }
+
+    // 清空画布
+    clearBtn.onclick = function() {
+        ctx.clearRect(0, 0, 700, 700);
+    }
+
+    // 改变颜色
+    colorBtn.onchange = function() {
+        bgc = this.value;
+        console.dir(this.value);
+    }
+
+    // 改变画笔粗细
+    numberBtn.onchange = function() {
+        numb = this.value;
+        // 限制最小值
+        if (numb < 1) {
+            this.value = 1;
+        }
+        console.log(numb);
+    }
+
+    // 切换画笔或者橡皮擦
+    clearxp.onclick = function() {
+        flag = !flag;
+        if (!flag) {
+            name1.innerHTML = "当前为: 画笔";
+        } else {
+            name1.innerHTML = "当前为: 橡皮擦";
+        }
+    }
+</script>
+
+</html>
