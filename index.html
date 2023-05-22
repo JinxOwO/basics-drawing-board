@@ -12,26 +12,26 @@
             padding: 0;
             user-select: none;
         }
-        
+
         canvas {
             border: 1px solid red;
         }
-        
+
         .box {
             width: 900px;
             margin: 0 auto;
         }
-        
+
         .gj {
             padding: 10px;
         }
-        
+
         button,
         input {
             margin-right: 15px;
             outline: none;
         }
-        
+
         #numberBtn,
         #colorBtn {
             width: 70px;
@@ -39,7 +39,7 @@
             line-height: 30px;
             vertical-align: middle;
         }
-        
+
         #name {
             color: red;
         }
@@ -74,13 +74,13 @@
     var x;
     var y;
     var flag = false;
-    myCanvas.onmousedown = function(e) {
+    myCanvas.onmousedown = function (e) {
         ctx.beginPath();
         x = e.pageX - this.offsetLeft;
         y = e.pageY - this.offsetTop;
         ctx.moveTo(x, y);
         // 鼠标在画布上移动时作画
-        myCanvas.onmousemove = function(e) {
+        myCanvas.onmousemove = function (e) {
             x = e.pageX - this.offsetLeft;
             y = e.pageY - this.offsetTop;
             console.log(x, y);
@@ -99,23 +99,23 @@
     }
 
     // 鼠标抬起时 不继续画
-    myCanvas.onmouseup = function() {
+    myCanvas.onmouseup = function () {
         myCanvas.onmousemove = "";
     }
 
     // 清空画布
-    clearBtn.onclick = function() {
+    clearBtn.onclick = function () {
         ctx.clearRect(0, 0, 700, 700);
     }
 
     // 改变颜色
-    colorBtn.onchange = function() {
+    colorBtn.onchange = function () {
         bgc = this.value;
         console.dir(this.value);
     }
 
     // 改变画笔粗细
-    numberBtn.onchange = function() {
+    numberBtn.onchange = function () {
         numb = this.value;
         // 限制最小值
         if (numb < 1) {
@@ -125,7 +125,7 @@
     }
 
     // 切换画笔或者橡皮擦
-    clearxp.onclick = function() {
+    clearxp.onclick = function () {
         flag = !flag;
         if (!flag) {
             name1.innerHTML = "当前为: 画笔";
