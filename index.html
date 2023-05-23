@@ -18,7 +18,7 @@
         }
 
         .box {
-            width: 900px;
+            width: 700px;
             margin: 0 auto;
         }
 
@@ -43,7 +43,20 @@
         #name {
             color: red;
         }
+
+        .father-dom {
+            width: 700px;
+            height: 700px;
+            border: 1px solid red;
+            position: relative;
+            margin: 0 auto;
+        }
+
+        .child {
+            position: absolute;
+        }
     </style>
+
 </head>
 
 <body>
@@ -57,44 +70,75 @@
 
         <canvas width="700" height="700">看见就是不支持</canvas>
     </div>
+    <div class="father-dom">
+
+    </div>
 
 </body>
+<script src="./lib/component/Button.js"></script>
+<script src="./lib/draw/index.js"></script>
+<!-- <script type="module">
+    import { LButton } from "./lib/component/Button.js";
+</script> -->
 <script>
+    console.log("----->", this);
+    let myBtn = new LButton();
     /** @type {HTMLCanvasElement} */
-    var myCanvas = document.querySelector("canvas");
-    var colorBtn = document.querySelector("#colorBtn");
-    var numberBtn = document.querySelector("#numberBtn");
-    var clearxp = document.querySelector("#clearxp");
-    var name1 = document.querySelector("#name");
-    var ctx = myCanvas.getContext("2d");
+    let myCanvas = document.querySelector("canvas");
+    let colorBtn = document.querySelector("#colorBtn");
+    let numberBtn = document.querySelector("#numberBtn");
+    let clearxp = document.querySelector("#clearxp");
+    let name1 = document.querySelector("#name");
+    let ctx = myCanvas.getContext("2d");
+    let dom = document.querySelector(".father-dom");
     // 记录颜色
-    var bgc = "";
-    var numb;
-    // 鼠标点击时 开始作画
-    var x;
-    var y;
-    var flag = false;
+    // 得到  canvas 所在的矩形
+    // getBoundingClientRect  获取某个元素相对于视窗的位置 返回的是对象
+    // 获取到的 参数 bottom height left right top width x y
+    let canvasRect = myCanvas.getBoundingClientRect();
+    let bgc = "";
+    let numb, x, y;
+    let flag = false;
+    let downPoint = new Point(0, 0);
+    let movePoint = new Point(0, 0);
     myCanvas.onmousedown = function (e) {
         ctx.beginPath();
-        x = e.pageX - this.offsetLeft;
-        y = e.pageY - this.offsetTop;
+        // 获取到鼠标按下的坐标 给绘制点的坐标赋值
+        // downPoint.x = e.pageX - canvasRect.left;
+        // downPoint.y = e.pageY - canvasRect.top;
+        downPoint.x = e.pageX - this.offsetLeft;
+        downPoint.y = e.pageY - this.offsetTop;
         ctx.moveTo(x, y);
+
+        // console.log("--y-->", e.pageY, this.offsetTop);
+        // return
         // 鼠标在画布上移动时作画
         myCanvas.onmousemove = function (e) {
-            x = e.pageX - this.offsetLeft;
-            y = e.pageY - this.offsetTop;
-            console.log(x, y);
+            // movePoint.x = e.pageX - canvasRect.left;
+            // movePoint.y = e.pageY - canvasRect.top;
+            movePoint.x = e.pageX - this.offsetLeft;
+            movePoint.y = e.pageY - this.offsetTop;
+            console.log(movePoint);
 
             if (!flag) {
                 // 设置颜色
                 ctx.strokeStyle = bgc;
                 ctx.lineWidth = numb;
-                ctx.lineTo(x, y);
+                ctx.lineTo(movePoint.x, movePoint.y);
+                // 获取宽高  移动后的位置 减去 按下时的位置
+
                 ctx.stroke();
             } else {
-                ctx.clearRect(x, y, 80, 80);
+                ctx.clearRect(movePoint.x, movePoint.y, 80, 80);
             }
 
+        }
+        myCanvas.onmouseout = function (e) {
+            let width = movePoint.x - downPoint.x;
+            let height = movePoint.y - downPoint.y;
+            console.log("--x-->", downPoint, width, height);
+            myBtn.init(dom, downPoint, width, height);
+            myCanvas.onmousemove = "";
         }
     }
 
